@@ -26,5 +26,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/bloominstituteoftechnology/W_S5_Challenge.git"
-  }
+  },
+
+  
+    "type": "commonjs"
+  
 }

@@ -1,3 +1,9 @@
+
+
+// const axios = require("axios")
+
+
+
 async function sprintChallenge5() { // Note the async keyword so you can use `await` inside sprintChallenge5
   // 👇 WORK ONLY BELOW THIS LINE 👇
   // 👇 WORK ONLY BELOW THIS LINE 👇
@@ -9,13 +15,44 @@ async function sprintChallenge5() { // Note the async keyword so you can use `aw
   // ❗ Use the variables `mentors` and `learners` to store the data.
   // ❗ Use the await keyword when using axios.
 
-  let mentors = [] // fix this
-  let learners = [] // fix this
+  const rawdata = await axios.get("http://localhost:3003/api/mentors")
+  const mentors = rawdata.data
+  console.log(mentors);
+ 
+
+  const rawdata2 = await axios.get("http://localhost:3003/api/learners")
+  let learners = rawdata2.data
+  console.log(learners);
+  
+  
 
   // 👆 ==================== TASK 1 END ====================== 👆
 
   // 👇 ==================== TASK 2 START ==================== 👇
 
+  // const mentorMap = mentors.reduce((map, mentor) => {
+  //   map[mentor.id] =mentor.name;
+  //   return map;
+  // }),
+
+  // learners = learners.map(learner => ({
+  //   id: learner.id,
+  //   fullName: learner.fullName,
+  //   email: learner.email,
+  //   mentors: learner.mentors.map(mentorId => mentorMap[mentorId]).filter(name => name)
+  // }));
+
+  learners = learners.map(learner => { 
+    return { 
+      ...learner, 
+      mentors: learner.mentors.map(id => {
+      const mentor = mentors.find(mentor => mentor.id === id);
+      return `${mentor.firstName} ${mentor.lastName}`
+     })
+    }
+  })
+
+console.log(learners);
   // 🧠 Combine learners and mentors.
   // ❗ At this point the learner objects only have the mentors' IDs.
   // ❗ Fix the `learners` array so that each learner ends up with this exact structure:
@@ -55,9 +92,39 @@ async function sprintChallenge5() { // Note the async keyword so you can use `aw
 
     // 👆 ==================== TASK 3 END ====================== 👆
 
+    card.classList.add('card');
+    heading.classList.add('heading');
+    email.classList.add('email');
+    mentorsHeading.classList.add('closed');
+    mentorsList.classList.add('mentors-list');
+
+    heading.textContent = learner.fullName;
+    email.textContent =learner.email;
+    mentorsHeading.textContent = 'Mentors';
+
+    learner.mentors.forEach(mentor => {
+      const mentorItem = document.createElement('li');
+      mentorItem.textContent = mentor;
+      mentorsList.appendChild(mentorItem);
+    });
+
+    card.appendChild(heading);
+    card.appendChild(email);
+    card.appendChild(mentorsList);
+    card.appendChild(mentorsHeading);
+    cardsContainer.appendChild(card);
+
+    
+
+
+
+
+
+
     // 👆 WORK ONLY ABOVE THIS LINE 👆
     // 👆 WORK ONLY ABOVE THIS LINE 👆
     // 👆 WORK ONLY ABOVE THIS LINE 👆
+    
     card.appendChild(mentorsList)
     card.dataset.fullName = learner.fullName
     cardsContainer.appendChild(card)
